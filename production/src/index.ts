@@ -194,6 +194,17 @@ async function createRun(request: Request, env: Env, user: { id: string }): Prom
   return json({ id, stage: "awaiting_brief_confirmation", manager });
 }
 
+async function updateRun(request: Request, env: Env, userId: string, run: RunRow): Promise<Response> {
+  if (run.stage !== "awaiting_brief_confirmation") return fail("Only an unconfirmed brief can be edited. Start a new session for an approved run.", 409);
+  const body = await requestJson(request);
+  const brief = asString(body.brief, "brief");
+  const manager = await openAiJson(env, MANAGER_SYSTEM, { brief });
+  await env.DB.prepare("UPDATE runs SET brief = ?, manager_json = ?, updated_at = ? WHERE id = ? AND user_id = ?")
+    .bind(brief, JSON.stringify(manager), now(), run.id, userId).run();
+  await recordEvent(env, run.id, { role: "manager", event_type: "brief_edited", status: "waiting_for_human", detail: "The original brief was edited and the Manager restated the new scope.", latency_ms: 0, ...modelMetrics(manager) });
+  return json({ id: run.id, stage: run.stage, manager });
+}
+
 async function confirmBrief(env: Env, userId: string, run: RunRow): Promise<Response> {
   if (run.stage !== "awaiting_brief_confirmation") return fail("This brief is not awaiting confirmation.", 409);
   const sources = await researchSources(env, run.brief);
@@ -298,6 +309,7 @@ async function api(request: Request, env: Env): Promise<Response> {
   if (!run) return fail("Run not found.", 404);
   const action = match[2];
   if (!action && request.method === "GET") return json(decodeRun(run, await feedbackForRun(env, run.id), await eventsForRun(env, run.id)));
+  if (!action && request.method === "PATCH") return updateRun(request, env, user.id, run);
   if (!action && request.method === "DELETE") {
     await env.DB.prepare("DELETE FROM runs WHERE id = ? AND user_id = ?").bind(run.id, user.id).run();
     return json({ deleted: run.id });
