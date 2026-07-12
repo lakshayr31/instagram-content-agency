@@ -104,7 +104,19 @@ async function feedbackForRun(env: Env, runId: string): Promise<Array<{ stage: s
   return (rows.results ?? []).map((row) => ({ stage: row.stage, feedback: row.feedback, createdAt: row.created_at }));
 }
 
-function decodeRun(row: RunRow, memory: Array<{ stage: string; feedback: string; createdAt: string }>) {
+type RunEvent = { role: string; event_type: string; status: string; detail: string; latency_ms: number; input_tokens: number; output_tokens: number; estimated_cost_usd: number; created_at: string };
+
+async function recordEvent(env: Env, runId: string, event: Omit<RunEvent, "created_at">): Promise<void> {
+  await env.DB.prepare("INSERT INTO run_events (id, run_id, role, event_type, status, detail, latency_ms, input_tokens, output_tokens, estimated_cost_usd, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+    .bind(crypto.randomUUID(), runId, event.role, event.event_type, event.status, event.detail, event.latency_ms, event.input_tokens, event.output_tokens, event.estimated_cost_usd, now()).run();
+}
+
+async function eventsForRun(env: Env, runId: string): Promise<RunEvent[]> {
+  const rows = await env.DB.prepare("SELECT role, event_type, status, detail, latency_ms, input_tokens, output_tokens, estimated_cost_usd, created_at FROM run_events WHERE run_id = ? ORDER BY created_at ASC").bind(runId).all<RunEvent>();
+  return rows.results ?? [];
+}
+
+function decodeRun(row: RunRow, memory: Array<{ stage: string; feedback: string; createdAt: string }>, events: RunEvent[] = []) {
   return {
     id: row.id,
     brief: row.brief,
@@ -114,6 +126,7 @@ function decodeRun(row: RunRow, memory: Array<{ stage: string; feedback: string;
     scripts: row.scripts_json ? JSON.parse(row.scripts_json) : null,
     final: row.final_json ? JSON.parse(row.final_json) : null,
     memory,
+    events,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -169,6 +182,7 @@ async function createRun(request: Request, env: Env, user: { id: string }): Prom
   const id = crypto.randomUUID();
   await env.DB.prepare("INSERT INTO runs (id, user_id, brief, stage, manager_json, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)")
     .bind(id, user.id, brief, "awaiting_brief_confirmation", JSON.stringify(manager), now(), now()).run();
+  await recordEvent(env, id, { role: "manager", event_type: "brief_restatement", status: "waiting_for_human", detail: "Manager summarized the brief and paused for explicit confirmation.", latency_ms: 0, input_tokens: 0, output_tokens: 0, estimated_cost_usd: 0 });
   return json({ id, stage: "awaiting_brief_confirmation", manager });
 }
 
@@ -181,6 +195,8 @@ async function confirmBrief(env: Env, userId: string, run: RunRow): Promise<Resp
   const strategy = { ...ideas, sources };
   await env.DB.prepare("UPDATE runs SET stage = ?, ideas_json = ?, updated_at = ? WHERE id = ? AND user_id = ?")
     .bind("ideas_review", JSON.stringify(strategy), now(), run.id, userId).run();
+  await recordEvent(env, run.id, { role: "sourcer", event_type: "research", status: "succeeded", detail: `Collected ${sources.length} cited sources through Linkup.`, latency_ms: 0, input_tokens: 0, output_tokens: 0, estimated_cost_usd: 0 });
+  await recordEvent(env, run.id, { role: "strategist", event_type: "idea_slate", status: "waiting_for_human", detail: "Generated one post, carousel, and reel; paused at ideas review.", latency_ms: 0, input_tokens: 0, output_tokens: 0, estimated_cost_usd: 0 });
   return json({ stage: "ideas_review", ideas: strategy });
 }
 
@@ -190,6 +206,7 @@ async function approveIdeas(env: Env, userId: string, run: RunRow): Promise<Resp
   const scripts = await openAiJson(env, SCRIPT_SYSTEM, { brief: run.brief, ideas: JSON.parse(run.ideas_json ?? "{}"), feedbackMemory: memory });
   await env.DB.prepare("UPDATE runs SET stage = ?, scripts_json = ?, updated_at = ? WHERE id = ? AND user_id = ?")
     .bind("scripts_review", JSON.stringify(scripts), now(), run.id, userId).run();
+  await recordEvent(env, run.id, { role: "producer", event_type: "scripts", status: "waiting_for_human", detail: "Produced post copy, carousel slide sequence, and reel script; paused at script review.", latency_ms: 0, input_tokens: 0, output_tokens: 0, estimated_cost_usd: 0 });
   return json({ stage: "scripts_review", scripts });
 }
 
@@ -199,6 +216,9 @@ async function approveScripts(env: Env, userId: string, run: RunRow): Promise<Re
   const final = await openAiJson(env, FINAL_SYSTEM, { brief: run.brief, scripts: JSON.parse(run.scripts_json ?? "{}"), feedbackMemory: memory });
   await env.DB.prepare("UPDATE runs SET stage = ?, final_json = ?, updated_at = ? WHERE id = ? AND user_id = ?")
     .bind("final", JSON.stringify(final), now(), run.id, userId).run();
+  await recordEvent(env, run.id, { role: "designer", event_type: "static_assets", status: "succeeded", detail: "Post and carousel render plans are ready for one-click download.", latency_ms: 0, input_tokens: 0, output_tokens: 0, estimated_cost_usd: 0 });
+  await recordEvent(env, run.id, { role: "video_audio_manager", event_type: "reel", status: "ready", detail: "Reel storyboard and ElevenLabs narration are ready; MP4 rendering requires the configured renderer adapter.", latency_ms: 0, input_tokens: 0, output_tokens: 0, estimated_cost_usd: 0 });
+  await recordEvent(env, run.id, { role: "poster", event_type: "package", status: "succeeded", detail: "Publishing package finalized; no external publishing was performed.", latency_ms: 0, input_tokens: 0, output_tokens: 0, estimated_cost_usd: 0 });
   return json({ stage: "final", final });
 }
 
@@ -254,13 +274,26 @@ async function api(request: Request, env: Env): Promise<Response> {
   const user = await requireUser(request, env);
   if (user instanceof Response) return user;
   if (url.pathname === "/api/me" && request.method === "GET") return json({ user });
+  if (url.pathname === "/api/runs" && request.method === "GET") {
+    const rows = await env.DB.prepare("SELECT id, brief, stage, created_at, updated_at FROM runs WHERE user_id = ? ORDER BY updated_at DESC").bind(user.id).all<{ id: string; brief: string; stage: string; created_at: string; updated_at: string }>();
+    return json({ runs: rows.results ?? [] });
+  }
+  if (url.pathname === "/api/pm" && request.method === "GET") {
+    const rows = await env.DB.prepare("SELECT * FROM runs WHERE user_id = ? ORDER BY updated_at DESC").bind(user.id).all<RunRow>();
+    const runs = await Promise.all((rows.results ?? []).map(async (row) => decodeRun(row, await feedbackForRun(env, row.id), await eventsForRun(env, row.id))));
+    return json({ runs });
+  }
   if (url.pathname === "/api/runs" && request.method === "POST") return createRun(request, env, user);
   const match = /^\/api\/runs\/([^/]+)(?:\/(confirm|approve-ideas|approve-scripts|feedback|narration))?$/.exec(url.pathname);
   if (!match) return fail("Not found.", 404);
   const run = await getRun(env, user.id, match[1] ?? "");
   if (!run) return fail("Run not found.", 404);
   const action = match[2];
-  if (!action && request.method === "GET") return json(decodeRun(run, await feedbackForRun(env, run.id)));
+  if (!action && request.method === "GET") return json(decodeRun(run, await feedbackForRun(env, run.id), await eventsForRun(env, run.id)));
+  if (!action && request.method === "DELETE") {
+    await env.DB.prepare("DELETE FROM runs WHERE id = ? AND user_id = ?").bind(run.id, user.id).run();
+    return json({ deleted: run.id });
+  }
   if (action === "confirm" && request.method === "POST") return confirmBrief(env, user.id, run);
   if (action === "approve-ideas" && request.method === "POST") return approveIdeas(env, user.id, run);
   if (action === "approve-scripts" && request.method === "POST") return approveScripts(env, user.id, run);
