@@ -1,3 +1,5 @@
+import { fetchWorkersTraffic } from "./analytics.js";
+
 export interface Env {
   ASSETS: Fetcher;
   DB: D1Database;
@@ -6,6 +8,7 @@ export interface Env {
   ELEVENLABS_API_KEY?: string;
   ELEVENLABS_VOICE_ID?: string;
   LINKUP_API_KEY?: string;
+  CF_ANALYTICS_TOKEN?: string;
 }
 
 type RunRow = {
@@ -28,6 +31,44 @@ function json(value: unknown, status = 200, headers: HeadersInit = {}): Response
 
 function fail(message: string, status = 400): Response {
   return json({ error: message }, status);
+}
+
+const ANALYTICS_ACCOUNT_ID = "1ef2e716cd9b48bdf163c5f661551a8c";
+const ANALYTICS_WORKER_NAME = "instagram-content-agency";
+
+async function publicTraffic(env: Env): Promise<Response> {
+  if (!env.CF_ANALYTICS_TOKEN) {
+    return json({
+      status: "unavailable",
+      message: "Live Cloudflare analytics is not configured yet.",
+      generatedAt: now(),
+    }, 200, { "cache-control": "no-store" });
+  }
+
+  const end = new Date();
+  const last24Hours = new Date(end.getTime() - 24 * 60 * 60 * 1000);
+  const last7Days = new Date(end.getTime() - 7 * 24 * 60 * 60 * 1000);
+  try {
+    const [day, week] = await Promise.all([
+      fetchWorkersTraffic(fetch, env.CF_ANALYTICS_TOKEN, ANALYTICS_ACCOUNT_ID, ANALYTICS_WORKER_NAME, last24Hours.toISOString(), end.toISOString()),
+      fetchWorkersTraffic(fetch, env.CF_ANALYTICS_TOKEN, ANALYTICS_ACCOUNT_ID, ANALYTICS_WORKER_NAME, last7Days.toISOString(), end.toISOString()),
+    ]);
+    return json({
+      status: "ok",
+      source: "Cloudflare Workers Analytics",
+      worker: ANALYTICS_WORKER_NAME,
+      generatedAt: end.toISOString(),
+      last24Hours: day,
+      last7Days: week,
+    }, 200, { "cache-control": "public, max-age=300, s-maxage=300" });
+  } catch (error) {
+    console.error(JSON.stringify({ event: "public_traffic_analytics_error", message: error instanceof Error ? error.message : "unknown" }));
+    return json({
+      status: "unavailable",
+      message: "Cloudflare analytics is temporarily unavailable.",
+      generatedAt: now(),
+    }, 200, { "cache-control": "no-store" });
+  }
 }
 
 function now(): string { return new Date().toISOString(); }
@@ -167,16 +208,32 @@ async function researchSources(env: Env, brief: string): Promise<Array<{ title: 
   }).slice(0, 8);
 }
 
+function sourceKey(value: string): string | null {
+  try {
+    const url = new URL(value);
+    url.hash = "";
+    url.search = "";
+    url.pathname = url.pathname.replace(/\/$/, "");
+    return url.toString();
+  } catch { return null; }
+}
+
 function validateIdeas(value: Record<string, unknown>, sources: Array<{ url: string }>): Record<string, unknown> {
   const ideas = value.ideas;
   if (!Array.isArray(ideas) || ideas.length !== 3) throw new Error("Strategist must return exactly three ideas.");
-  const allowed = new Set(sources.map((source) => source.url));
+  const allowed = new Map(sources.flatMap((source) => {
+    const key = sourceKey(source.url);
+    return key ? [[key, source.url]] : [];
+  }));
   const formats = new Set<string>();
   for (const idea of ideas) {
     if (!idea || typeof idea !== "object" || Array.isArray(idea)) throw new Error("Strategist returned an invalid idea.");
     const item = idea as Record<string, unknown>;
     if (typeof item.format !== "string" || !["post", "carousel", "reel"].includes(item.format)) throw new Error("Strategist returned an invalid format.");
-    if (typeof item.sourceUrl !== "string" || !allowed.has(item.sourceUrl)) throw new Error("Strategist must preserve a source URL from the research packet.");
+    const key = typeof item.sourceUrl === "string" ? sourceKey(item.sourceUrl) : null;
+    const canonicalUrl = key ? allowed.get(key) : undefined;
+    if (!canonicalUrl) throw new Error("Strategist must preserve a source URL from the research packet.");
+    item.sourceUrl = canonicalUrl;
     formats.add(item.format);
   }
   if (formats.size !== 3) throw new Error("Strategist must return one post, one carousel, and one reel.");
@@ -284,6 +341,7 @@ async function narration(env: Env, run: RunRow): Promise<Response> {
 
 async function api(request: Request, env: Env): Promise<Response> {
   const url = new URL(request.url);
+  if (url.pathname === "/api/proof/traffic" && request.method === "GET") return publicTraffic(env);
   if (url.pathname === "/api/signup" && request.method === "POST") {
     const body = await requestJson(request);
     const email = asString(body.email, "email", 254).toLowerCase();
@@ -333,7 +391,11 @@ async function api(request: Request, env: Env): Promise<Response> {
 export default {
   async fetch(request, env, ctx): Promise<Response> {
     try {
-      if (new URL(request.url).pathname.startsWith("/api/")) return await api(request, env);
+      const url = new URL(request.url);
+      if (url.pathname === "/proof/traffic") {
+        return env.ASSETS.fetch(new Request(new URL("/proof.html", request)));
+      }
+      if (url.pathname.startsWith("/api/")) return await api(request, env);
       return env.ASSETS.fetch(request);
     } catch (error) {
       console.error(JSON.stringify({ event: "request_error", message: error instanceof Error ? error.message : "unknown" }));
