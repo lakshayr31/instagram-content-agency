@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { fetchLatestArticles } from "../src/fetch-latest-articles.js";
+import { fetchLatestArticles } from "../src/content-fetcher/fetch-latest-articles.js";
 
 test("returns only articles published within the last two hours for every configured source", async () => {
   const now = new Date("2026-07-12T12:00:00.000Z");

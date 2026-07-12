@@ -1,4 +1,4 @@
-import type { ContentItem } from "./content-fetcher.js";
+import type { ContentItem } from "../content-fetcher/types.js";
 
 export type ContentVerdict = "important" | "watch" | "ignore";
 

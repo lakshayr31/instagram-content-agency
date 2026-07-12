@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { assessContentItem } from "../src/strategist.js";
+import { assessContentItem } from "../src/strategist/assess-content-item.js";
 
 test("prioritizes timely, audience-relevant content", () => {
   const assessment = assessContentItem({

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { fetchRssSources } from "../src/rss-adapter.js";
+import { fetchRssSources } from "../src/content-fetcher/rss-adapter.js";
 
 test("fetches recent RSS items, resolves URLs, and omits duplicates and blocked URLs", async () => {
   const items = await fetchRssSources(

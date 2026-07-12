@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { normalizeRssItem } from "../src/content-fetcher.js";
+import { normalizeRssItem } from "../src/content-fetcher/types.js";
 
 test("normalizes a valid RSS item into the agency content-item format", () => {
   const item = normalizeRssItem({

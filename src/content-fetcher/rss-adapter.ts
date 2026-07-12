@@ -1,7 +1,7 @@
 import GoogleNewsDecoder from "google-news-decoder";
 import RSSParser from "rss-parser";
 
-import type { ContentItem } from "./content-fetcher.js";
+import type { ContentItem } from "./types.js";
 
 export interface RssSource {
   name: string;
