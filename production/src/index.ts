@@ -8,6 +8,8 @@ export interface Env {
   ELEVENLABS_API_KEY?: string;
   ELEVENLABS_VOICE_ID?: string;
   LINKUP_API_KEY?: string;
+  LINKUP_COST_PER_SEARCH_USD?: string;
+  ELEVENLABS_COST_PER_1K_CHARS_USD?: string;
   CF_ANALYTICS_TOKEN?: string;
 }
 
@@ -114,7 +116,7 @@ async function openAiJson(env: Env, system: string, input: unknown): Promise<Rec
     method: "POST",
     headers: { "authorization": `Bearer ${env.OPENAI_API_KEY}`, "content-type": "application/json" },
     body: JSON.stringify({
-      model: env.OPENAI_MODEL ?? "gpt-4.1-mini",
+      model: env.OPENAI_MODEL ?? "gpt-5.6-terra",
       response_format: { type: "json_object" },
       temperature: 0.5,
       messages: [
@@ -156,6 +158,11 @@ async function recordEvent(env: Env, runId: string, event: Omit<RunEvent, "creat
 async function markRoleSucceeded(env: Env, runId: string, role: string): Promise<void> {
   await env.DB.prepare("UPDATE run_events SET status = ? WHERE run_id = ? AND role = ? AND status = ?")
     .bind("succeeded", runId, role, "waiting_for_human").run();
+}
+
+function configuredCost(value: string | undefined, units = 1): number {
+  const rate = Number(value);
+  return Number.isFinite(rate) && rate > 0 ? Number((rate * units).toFixed(6)) : 0;
 }
 
 function modelMetrics(value: Record<string, unknown>): Pick<RunEvent, "input_tokens" | "output_tokens" | "estimated_cost_usd"> {
@@ -277,7 +284,8 @@ async function confirmBrief(env: Env, userId: string, run: RunRow): Promise<Resp
   const strategy = { ...ideas, sources };
   await env.DB.prepare("UPDATE runs SET stage = ?, ideas_json = ?, updated_at = ? WHERE id = ? AND user_id = ?")
     .bind("ideas_review", JSON.stringify(strategy), now(), run.id, userId).run();
-  await recordEvent(env, run.id, { role: "sourcer", event_type: "research", status: "succeeded", detail: `Collected ${sources.length} cited sources through Linkup.`, latency_ms: 0, input_tokens: 0, output_tokens: 0, estimated_cost_usd: 0 });
+  const linkupCost = configuredCost(env.LINKUP_COST_PER_SEARCH_USD);
+  await recordEvent(env, run.id, { role: "sourcer", event_type: "linkup_research", status: "succeeded", detail: `Collected ${sources.length} cited sources through Linkup (${linkupCost ? "estimated cost recorded" : "usage recorded; set LINKUP_COST_PER_SEARCH_USD to price it"}).`, latency_ms: 0, input_tokens: 1, output_tokens: 0, estimated_cost_usd: linkupCost });
   await recordEvent(env, run.id, { role: "strategist", event_type: "idea_slate", status: "waiting_for_human", detail: "Generated one post, carousel, and reel; paused at ideas review.", latency_ms: 0, ...modelMetrics(ideas) });
   return json({ stage: "ideas_review", ideas: strategy });
 }
@@ -336,6 +344,9 @@ async function narration(env: Env, run: RunRow): Promise<Response> {
     body: JSON.stringify({ text, model_id: "eleven_multilingual_v2" }),
   });
   if (!response.ok) return fail("ElevenLabs narration failed.", 502);
+  const characters = text.length;
+  const narrationCost = configuredCost(env.ELEVENLABS_COST_PER_1K_CHARS_USD, characters / 1000);
+  await recordEvent(env, run.id, { role: "video_audio_manager", event_type: "elevenlabs_narration", status: "succeeded", detail: `Generated ElevenLabs narration for ${characters} characters (${narrationCost ? "estimated cost recorded" : "usage recorded; set ELEVENLABS_COST_PER_1K_CHARS_USD to price it"}).`, latency_ms: 0, input_tokens: characters, output_tokens: 0, estimated_cost_usd: narrationCost });
   return new Response(response.body, { headers: { "content-type": "audio/mpeg", "cache-control": "no-store" } });
 }
 
@@ -393,7 +404,7 @@ export default {
     try {
       const url = new URL(request.url);
       if (url.pathname === "/proof/traffic") {
-        return env.ASSETS.fetch(new Request(new URL("/proof.html", request)));
+        return env.ASSETS.fetch(new Request(new URL("/proof.html", request.url)));
       }
       if (url.pathname.startsWith("/api/")) return await api(request, env);
       return env.ASSETS.fetch(request);
