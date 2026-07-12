@@ -118,7 +118,6 @@ async function openAiJson(env: Env, system: string, input: unknown): Promise<Rec
     body: JSON.stringify({
       model: env.OPENAI_MODEL ?? "gpt-5.6-terra",
       response_format: { type: "json_object" },
-      temperature: 0.5,
       messages: [
         { role: "system", content: system },
         { role: "user", content: JSON.stringify(input) },
