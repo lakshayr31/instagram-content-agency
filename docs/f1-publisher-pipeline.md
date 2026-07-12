@@ -50,6 +50,25 @@ npm run --silent research:f1-publisher
 
 Then run the Hermes publisher agent against the resulting research packet to regenerate the Markdown handoff.
 
+## Three-format slate execution
+
+The research packet is also the live input to the higher-value hackathon run:
+
+```bash
+npm run hackathon:latest-f1
+```
+
+This runner invokes the Manager, a slate-mode Strategist, three format-constrained Creative Producer calls, static renderer, reel renderer, and Poster. The Strategist must return exactly one post, carousel, and reel. The Manager reviews the slate and can request one rework attempt before rendering.
+
+A successful run writes a self-contained folder under `artifacts/latest-f1-slate/` with:
+
+- `dashboard.html` and `run.json`;
+- Manager plan/review records and Strategist attempts;
+- post, carousel, and reel artifacts;
+- poster packages and source-linked creative outputs.
+
+The result remains `awaiting_approval`; no external delivery or Instagram-publishing claim is made until a human approval action and persisted delivery receipt exist.
+
 ## Guardrails
 
 - RSS items are hard-filtered to the prior 24 hours.

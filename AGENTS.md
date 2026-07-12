@@ -2,16 +2,21 @@
 
 ## Product purpose
 
-This project turns bounded, cited research into a handoff for a downstream post-creator. It does **not** publish posts and it must never invent facts, quotes, source URLs, or successful delivery states.
+This project turns bounded, cited research into traceable Instagram-ready assets. It does **not** publish posts and it must never invent facts, quotes, source URLs, or successful delivery states. Human approval is required before any external export/delivery.
 
-## Canonical F1 publisher flow
+## Canonical hackathon flow
 
 ```text
 approved RSS sources + three Linkup questions
-  → research packet
-  → Hermes content-publisher agent
-  → exactly nine post ideas
-  → post-creator handoff JSON / Markdown / dashboard JSON
+  → cited research packet
+  → Manager plan
+  → Strategist: exactly one post + carousel + reel
+  → format-constrained Creative Producer runs
+  → Manager review / one rework attempt
+  → static PNG + captioned MP4 renderers
+  → Poster packages
+  → durable run trace + dashboard
+  → human approval before any delivery
 ```
 
 ### Inputs
@@ -31,18 +36,31 @@ approved RSS sources + three Linkup questions
    - Audience: F1 fans who want timely, useful, and debate-worthy content.
    - The persona must reason from the research packet only.
 
-### Required outputs
+## Required outputs
+
+### Research and legacy handoffs
 
 - `artifacts/f1-publisher-research.json`
   - Raw, source-backed RSS and Linkup evidence.
 - `artifacts/f1-content-publisher-handoff.md`
-  - Human-readable brief for the post creator.
+  - Human-readable idea brief.
 - `artifacts/f1-post-creator-handoff.json`
-  - Canonical machine-readable workflow payload.
+  - Legacy machine-readable handoff.
 - `artifacts/f1-content-dashboard.json`
-  - Frontend-ready, grouped payload with three content sections and card data.
+  - Legacy grouped-card payload.
 
-The publisher handoff must contain **exactly nine ideas**:
+### Canonical latest-F1 run
+
+`npm run hackathon:latest-f1` writes `artifacts/latest-f1-slate/<run-id>/` containing:
+
+- `dashboard.html` and `run.json`;
+- Manager plan/review and Strategist attempt records;
+- exactly one post directory, carousel directory, and reel directory;
+- the real rendered artifacts and `poster.json` for each format.
+
+The run may be called `awaiting_approval`, but never `delivered` or `published` without a persisted external provider/export result.
+
+The legacy publisher handoff contains **exactly nine ideas**:
 - 3 `evergreen`
 - 3 `controversial`
 - 3 `growth`

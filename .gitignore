@@ -4,4 +4,9 @@ dist/
 .env.*
 !.env.example
 coverage/
+artifacts/
+.claude-output/
+.hermes/
+.wrangler/
+worker-configuration.d.ts
 .DS_Store

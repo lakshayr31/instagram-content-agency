@@ -7,12 +7,21 @@
     "test": "tsx --test tests/*.test.ts tests/**/*.test.ts",
     "typecheck": "tsc --noEmit",
     "fetch:cycle": "node --env-file=.env.local --import tsx src/run-content-intelligence-cycle.ts",
-    "research:f1-publisher": "node --env-file=.env.local --import tsx src/run-f1-publisher-research.ts"
+    "research:f1-publisher": "node --env-file=.env.local --import tsx src/run-f1-publisher-research.ts",
+    "creative:produce": "node --import tsx src/run-creative-producer.ts",
+    "reel:aduo": "node --env-file=.env.local --import tsx src/run-aduo-reel.ts",
+    "design:carousels": "node --env-file=.env.local --import tsx src/designer/generate-carousel-pack.ts",
+    "design:carousel-scenes": "node --env-file=.env.local --import tsx src/designer/generate-carousel-scenes.ts",
+    "hackathon:demo": "node --env-file=.env.local --import tsx src/run-hackathon-demo.ts",
+    "hackathon:approve": "node --import tsx src/approve-hackathon-demo.ts",
+    "hackathon:latest-f1": "node --env-file=.env.local --import tsx src/run-latest-f1-slate.ts"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260712.1",
     "@types/node": "^24.10.1",
     "tsx": "^4.20.6",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "wrangler": "^4.110.0"
   },
   "dependencies": {
     "google-news-decoder": "^1.0.1",

@@ -1,0 +1,89 @@
+[
+  {
+    "id": "sainz-williams",
+    "approvedContent": {
+      "category": "controversial",
+      "title": "Carlos Sainz is worried Williams is going backwards",
+      "coreMessage": "The supplied report is about Sainz's concern over Williams performance, not a confirmed plan for him to leave the team.",
+      "sourceUrl": "https://www.the-race.com/formula-1/why-williams-is-worrying-carlos-sainz-so-much/",
+      "verifiedFacts": [
+        "The Race reports that Williams began 2026 with a car up to 28kg over the weight limit.",
+        "Sainz said the team had shed weight but the gap to the front and the leader of the midfield kept increasing.",
+        "Williams fast-tracked a front wing for Silverstone after expecting a larger performance uplift from it.",
+        "Sainz said: We don't seem to be finding the laptime that we expected in the winter.",
+        "The supplied report does not confirm that Sainz wants to leave Williams or has an exit plan."
+      ],
+      "requiredAngle": "Use the provocative Sainz/Williams question, but resolve it with the evidence rather than inventing an exit claim."
+    },
+    "clientBrief": {
+      "audience": "Indian F1 fans, from newer viewers to engaged race-weekend followers",
+      "brandVoice": "clear, punchy, informed, non-clickbait after the hook",
+      "offer": "independent Formula 1 explainer and news page",
+      "boundaries": [
+        "Do not state or imply that Sainz wants to leave Williams.",
+        "Do not make contractual claims.",
+        "Attribute source reporting where appropriate."
+      ],
+      "objective": "comments and informed debate"
+    }
+  },
+  {
+    "id": "leclerc-journey",
+    "approvedContent": {
+      "category": "evergreen",
+      "title": "Charles Leclerc: the Ferrari journey",
+      "coreMessage": "A concise driver story from Monaco karting to his 2026 British Grand Prix victory for Ferrari.",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Charles_Leclerc",
+      "verifiedFacts": [
+        "Leclerc was born and raised in Monte Carlo and began competitive karting at age five.",
+        "He won the GP3 Series title in 2016 and the FIA Formula 2 title in 2017.",
+        "He made his Formula 1 debut with Sauber at the 2018 Australian Grand Prix.",
+        "He joined Ferrari in 2019, won his first Formula 1 race at the 2019 Belgian Grand Prix, and won at Monza in 2019.",
+        "He finished runner-up in the 2022 Formula One World Drivers' Championship.",
+        "He won the Monaco Grand Prix in 2024, becoming the first Monégasque winner in 93 years.",
+        "Official F1 results list Leclerc as winner of the 2026 British Grand Prix at Silverstone on 5 July 2026; it was his ninth Formula 1 victory."
+      ],
+      "requiredAngle": "A short, emotional but factual journey for fans who know Leclerc as Ferrari number 16."
+    },
+    "clientBrief": {
+      "audience": "Indian F1 fans, including people learning driver backstories",
+      "brandVoice": "warm, cinematic, respectful, simple",
+      "offer": "independent Formula 1 explainer and news page",
+      "boundaries": [
+        "Do not call Leclerc a Formula 1 world champion.",
+        "Do not add personal-history claims not supplied in the facts."
+      ],
+      "objective": "saves and shares"
+    }
+  },
+  {
+    "id": "aduo-explainer",
+    "approvedContent": {
+      "category": "growth",
+      "title": "ADUO: F1's 2026 engine catch-up system",
+      "coreMessage": "Explain in simple terms how F1 grants limited extra engine-development opportunities to manufacturers whose combustion engine is behind the benchmark.",
+      "sourceUrl": "https://www.formula1.com/en/latest/article/explained-what-is-f1s-aduo-engine-upgrade-system-and-how-will-it-work.2A67N47ntcdQbKhHOd7GdD",
+      "verifiedFacts": [
+        "ADUO means Additional Development and Upgrade Opportunities.",
+        "The 2026 to 2030 mechanism is for power-unit manufacturers, not directly for teams or drivers.",
+        "The FIA's trigger is based on an ICE Performance Index, not total power-unit performance.",
+        "At 2% to under 4% behind the leading ICE, a manufacturer can receive one additional upgrade in the current season and one in the following season.",
+        "At 4% or more behind, a manufacturer can receive two additional upgrades in the current season and two in the following season.",
+        "The Race reports the first 2026 assessment put Ford-branded Red Bull Powertrains at the benchmark; Mercedes received one additional 2026 upgrade, and Ferrari and Honda received two. The FIA's exact method is not public.",
+        "Energy recovery, deployment, batteries and broader energy management are outside the qualifying ICE measure."
+      ],
+      "requiredAngle": "Make a technical regulation understandable in under 30 seconds for an India-first F1 audience."
+    },
+    "clientBrief": {
+      "audience": "Indian F1 fans who may be new to 2026 power-unit rules",
+      "brandVoice": "very simple, confident, never condescending",
+      "offer": "independent Formula 1 explainer and news page",
+      "boundaries": [
+        "Do not call ADUO balance of performance or an instant speed boost.",
+        "Do not say a team gets ADUO when the manufacturer is the qualifying entity.",
+        "Attribute recipient claims to The Race."
+      ],
+      "objective": "saves, shares, and new-follower reach"
+    }
+  }
+]

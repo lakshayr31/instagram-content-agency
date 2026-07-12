@@ -1,0 +1,249 @@
+[
+  {
+    "id": "sainz-williams",
+    "output": {
+      "category": "controversial",
+      "format": "carousel",
+      "formatRationale": "A carousel lets the opening question create debate, then resolves it slide by slide with the reported evidence. It suits Indian F1 fans who want the context behind a provocative Sainz/Williams headline—not an invented driver-market story.",
+      "creativeBrief": {
+        "audienceTakeaway": "Sainz is publicly concerned about Williams's performance trend, but the supplied reporting does not say he wants to leave the team or has an exit plan.",
+        "creativeConcept": "Headline heat, evidence-led answer: start with the question fans will ask, then separate the performance concern from unsupported exit speculation.",
+        "hook": "Is Carlos Sainz already worried about Williams?",
+        "visualDirection": "Use a sharp Williams blue-and-white editorial layout. Cover: close Sainz crop with a large question mark and restrained warning-red accent. Inside slides: clean race-engineering visual language—weight scale, downward performance line, front-wing graphic, and quote-card treatment. Keep every factual slide attributed in small but readable type: “Reported by The Race.” The final slide should visually contrast “Performance concern” with “No confirmed exit plan.”",
+        "callToAction": "Do you think Williams can turn the development trend around? Make your case in the comments."
+      },
+      "exampleExecution": {
+        "format": "carousel",
+        "caption": "Is Carlos Sainz already worried about Williams?\n\nThe short answer: he is worried about the performance trend.\n\nThe Race reports Williams started 2026 with a car up to 28kg over the weight limit. Sainz says the team has shed weight—but the gap to the front and the midfield leader has kept increasing.\n\nWilliams also fast-tracked a front wing for Silverstone after expecting a larger uplift from it.\n\nThat is a real concern. But it is not proof of an exit plan.\n\nThe supplied report does not confirm that Sainz wants to leave Williams or that he has plans to do so.\n\nPerformance frustration? Yes.\nConfirmed Sainz-to-anywhere rumours? No.\n\nDo you think Williams can reverse the trend? Tell us why below.\n\nSource: The Race",
+        "asset": {
+          "carouselSlides": [
+            {
+              "slide": 1,
+              "onScreenCopy": "Is Carlos Sainz already worried about Williams?",
+              "visual": "Tight, high-contrast portrait of Sainz in Williams colours. Large white headline over deep Williams blue; subtle red underline under “worried.” Small footer: “The evidence behind the question →”"
+            },
+            {
+              "slide": 2,
+              "onScreenCopy": "Yes—about the performance trend.\n\nNot a confirmed exit.",
+              "visual": "Split layout. Left: bold “Performance concern” with a warning-line icon. Right: “No confirmed exit plan” with a clean check/cross distinction. Footer attribution: “Based on reporting by The Race.”"
+            },
+            {
+              "slide": 3,
+              "onScreenCopy": "Williams reportedly began 2026\nup to 28kg over the weight limit.",
+              "visual": "Minimal technical-style weight-scale graphic labelled “up to 28kg.” Use a stylised Williams car silhouette, not a claim-heavy performance chart. Footer: “Reported by The Race.”"
+            },
+            {
+              "slide": 4,
+              "onScreenCopy": "Sainz says Williams shed weight.\n\nBut the gap kept increasing—to the front and the midfield leader.",
+              "visual": "Two simple diverging lines: one labelled “weight” moving down, one labelled “gap” moving up. Include a small Sainz portrait cutout. Footer: “Reported by The Race.”"
+            },
+            {
+              "slide": 5,
+              "onScreenCopy": "“We don't seem to be finding the laptime that we expected in the winter.”\n\n— Carlos Sainz",
+              "visual": "Premium quote card with large quotation marks, Sainz image in monochrome blue, and clear attribution. Footer: “Quote reported by The Race.”"
+            },
+            {
+              "slide": 6,
+              "onScreenCopy": "Williams fast-tracked a front wing for Silverstone.\n\nThey expected a larger performance uplift from it.",
+              "visual": "Close-up front-wing illustration with a fast-forward visual motif. Keep language exact and restrained. Footer: “Reported by The Race.”"
+            },
+            {
+              "slide": 7,
+              "onScreenCopy": "The verdict:\n\nSainz is raising a performance concern.\n\nThe report does not confirm he wants out.",
+              "visual": "Strong final distinction in two stacked panels: “What the report supports” and “What it does not support.” Use green/white for supported context and muted grey for the unsupported exit claim."
+            },
+            {
+              "slide": 8,
+              "onScreenCopy": "Can Williams turn it around?\n\nDrop your take below.",
+              "visual": "Clean comment-driven end card in Williams blue. Small prompt options: “Development issue?” “Weight compromise?” “Too early to judge?” Include page branding and “Source: The Race.”"
+            }
+          ],
+          "postVisual": null,
+          "reelBeats": null
+        }
+      },
+      "productionNotes": [
+        "Keep the cover provocative but make the second slide immediately clarify that this is about performance concerns, not a departure claim.",
+        "Use “reported by The Race” on factual slides and retain the source credit in the caption.",
+        "Do not use transfer-market graphics, rival-team logos, contract imagery, or wording such as “exit,” “leave,” or “move” except when explicitly denying that the report confirms such a plan.",
+        "Use the Sainz quote exactly as supplied, including its wording and attribution.",
+        "Design for 4:5 portrait carousel dimensions with high-contrast text and concise slide copy."
+      ],
+      "factChecksRequired": [
+        "Confirm the exact wording and context of the Sainz quote against the supplied The Race article before publishing.",
+        "Confirm the article's stated “up to 28kg” figure and that it refers to Williams beginning 2026.",
+        "Confirm the front-wing timing at Silverstone and the report's description of the expected performance uplift.",
+        "Confirm that no newer credible reporting has changed the status of any alleged Sainz exit plan before publishing; do not add any such claim unless independently verified."
+      ]
+    }
+  },
+  {
+    "id": "leclerc-journey",
+    "output": {
+      "category": "evergreen",
+      "format": "carousel",
+      "formatRationale": "Leclerc’s story has clear, emotionally resonant milestones that become more powerful in sequence: Monaco beginnings, junior-title momentum, Ferrari arrival, home-race history, and the Silverstone win. A carousel lets fans absorb the journey one chapter at a time and gives newer Indian F1 fans a saveable driver-backstory reference.",
+      "creativeBrief": {
+        "audienceTakeaway": "Charles Leclerc’s Ferrari story was built over years: from starting karting in Monaco at five to earning a ninth Formula 1 victory at Silverstone in 2026.",
+        "creativeConcept": "Number 16, chapter by chapter: a cinematic timeline that follows Leclerc from Monaco karting to a Ferrari win at Silverstone.",
+        "hook": "From Monaco karting to a Ferrari win at Silverstone. The journey of number 16.",
+        "visualDirection": "Use a premium Ferrari-red, black, cream, and muted track-grey palette. Pair archival-feeling timeline typography with clean modern race imagery or licensed editorial photography. Each slide should feature one date or milestone in large type, with restrained copy and a subtle red line connecting the full journey. Keep the final slide celebratory but composed rather than overly dramatic.",
+        "callToAction": "Save this for the next time someone asks why Ferrari fans believe in Charles Leclerc."
+      },
+      "exampleExecution": {
+        "format": "carousel",
+        "caption": "Before Ferrari number 16,\nthere was a five-year-old from Monte Carlo starting competitive karting.\n\nCharles Leclerc’s route to Formula 1 was built title by title, race by race — from GP3 and Formula 2 to his first Ferrari win, a historic Monaco victory, and now Silverstone.\n\nOn 5 July 2026, Leclerc won the British Grand Prix for Ferrari — his ninth Formula 1 victory.\n\nA journey that keeps adding chapters.\n\nSave this timeline for the Leclerc fan in your group.\n\n#CharlesLeclerc #Ferrari #F1 #Formula1 #BritishGP #IndianF1Fans",
+        "asset": {
+          "carouselSlides": [
+            {
+              "slide": 1,
+              "onScreenCopy": "FROM MONACO KARTING\nTO FERRARI GLORY.\n\nThe journey of number 16.",
+              "visual": "Cinematic close-up of Leclerc in Ferrari red, layered with a subtle Monaco street-map texture and a thin timeline line beginning at the bottom."
+            },
+            {
+              "slide": 2,
+              "onScreenCopy": "MONTE CARLO\nAGE 5\n\nLeclerc began competitive karting.",
+              "visual": "Karting-inspired visual treatment: a young-kart silhouette or licensed karting image, framed by Monaco-inspired architecture and minimal red accents."
+            },
+            {
+              "slide": 3,
+              "onScreenCopy": "THE TITLES CAME FIRST.\n\n2016 — GP3 champion\n2017 — Formula 2 champion",
+              "visual": "Split-layout timeline with bold 2016 and 2017 numerals. Use two restrained podium or junior-series racing images, keeping typography dominant."
+            },
+            {
+              "slide": 4,
+              "onScreenCopy": "2018\nFORMULA 1 DEBUT.\n\nAustralian Grand Prix.\nSauber.",
+              "visual": "A clean transition slide with a Sauber-era race image, track-grid graphic elements, and the word “DEBUT” in large condensed type."
+            },
+            {
+              "slide": 5,
+              "onScreenCopy": "2019\nA FERRARI DRIVER.\n\nThen his first F1 win:\nBelgian Grand Prix.",
+              "visual": "Ferrari-red full-bleed image of Leclerc in 2019, with “FIRST WIN” subtly overlaid. Use a visual shift from cool neutral tones into Ferrari red."
+            },
+            {
+              "slide": 6,
+              "onScreenCopy": "2019\nMONZA.\n\nA Ferrari win at home.",
+              "visual": "High-energy but elegant Monza visual: grandstand texture, Italian tricolour used sparingly, and Leclerc/Ferrari race imagery."
+            },
+            {
+              "slide": 7,
+              "onScreenCopy": "2022\nRUNNER-UP\nIN THE WORLD CHAMPIONSHIP.",
+              "visual": "Minimal, reflective portrait treatment. A single large “2” or “RUNNER-UP” typography motif with a subtle championship-season collage."
+            },
+            {
+              "slide": 8,
+              "onScreenCopy": "2024\nMONACO WON.\n\nThe first Monégasque winner\nin 93 years.",
+              "visual": "Hero image from Monaco with a refined Monaco-red-and-white visual motif. Let the historic milestone carry the slide with ample negative space."
+            },
+            {
+              "slide": 9,
+              "onScreenCopy": "5 JULY 2026\nSILVERSTONE.\n\nCharles Leclerc wins\nfor Ferrari.\n\nF1 victory no. 9.",
+              "visual": "Celebratory Silverstone win image with Ferrari red cutting through British track-grey tones. Use “9TH F1 WIN” as the visual anchor."
+            },
+            {
+              "slide": 10,
+              "onScreenCopy": "MONACO. FERRARI. 16.\n\nTHE STORY CONTINUES.\n\nSave this journey.",
+              "visual": "Closing portrait of Leclerc in Ferrari kit or helmet, with the full timeline line ending beside a large number 16. Include the page handle and a subtle save icon."
+            }
+          ],
+          "postVisual": null,
+          "reelBeats": null
+        }
+      },
+      "productionNotes": [
+        "Use only licensed, owned, or editorially permitted photography and footage; do not imply official Ferrari or Formula 1 affiliation.",
+        "Keep each slide to one milestone and maintain high contrast for mobile readability.",
+        "Place the date and series name on every factual milestone slide to make the carousel easy to save and reference.",
+        "Use the caption’s final save prompt as the primary engagement CTA; avoid speculative language about future results.",
+        "If using images from multiple seasons, apply one consistent grade so the sequence reads as a single cinematic story."
+      ],
+      "factChecksRequired": [
+        "Confirm the official Formula 1 results for the 2026 British Grand Prix at Silverstone, including the 5 July 2026 date, before publishing.",
+        "Confirm that the Silverstone victory remains Leclerc’s ninth Formula 1 victory at the time the post is published.",
+        "Confirm image licensing and any required photographer, team, or agency credits."
+      ]
+    }
+  },
+  {
+    "id": "aduo-explainer",
+    "output": {
+      "category": "growth",
+      "format": "reel",
+      "formatRationale": "A short reel can turn a dense 2026 technical rule into a simple visual ladder in under 30 seconds. Showing the percentage thresholds, then clearly separating the engine measure from the rest of the power unit, makes the explainer easy to save and share for newer Indian F1 fans.",
+      "creativeBrief": {
+        "audienceTakeaway": "ADUO is a limited catch-up system for power-unit manufacturers whose combustion engine performance sits behind the benchmark. It is not Balance of Performance, not awarded directly to teams or drivers, and not an instant speed boost.",
+        "creativeConcept": "F1's engine catch-up ladder: find the benchmark, measure the ICE gap, then unlock a limited number of extra development opportunities.",
+        "hook": "F1 has a catch-up rule for 2026 engines. Here is ADUO in 25 seconds.",
+        "visualDirection": "Use a clean vertical explainer style: dark F1-inspired background, high-contrast white type, one accent colour for the benchmark and another for catch-up opportunities. Animate a simple engine icon moving down a percentage ladder. Keep labels large and plain: 'manufacturer', 'ICE only', 'extra upgrade opportunities'. Use a clear visual cross-out when clarifying what ADUO is not.",
+        "callToAction": "Save this before the 2026 season, and follow for F1 rules explained without the jargon."
+      },
+      "exampleExecution": {
+        "format": "reel",
+        "caption": "ADUO is F1's 2026 engine catch-up mechanism — but it is not Balance of Performance.\n\nIt applies to power-unit manufacturers, not directly to teams or drivers. And the qualifying measure looks at combustion-engine performance only, not the entire power unit.\n\nIf a manufacturer is behind the benchmark, it can receive limited additional development and upgrade opportunities:\n• 2% to under 4% behind: 1 extra opportunity this season + 1 next season\n• 4% or more behind: 2 this season + 2 next season\n\nThat does not mean instant lap time. It means extra chances to develop.\n\nThe Race reported that the first 2026 assessment placed Ford-branded Red Bull Powertrains at the benchmark, with Mercedes receiving one additional 2026 upgrade and Ferrari and Honda receiving two. The FIA's exact assessment method is not public.\n\nSave this for 2026. Follow for F1 explained simply.",
+        "asset": {
+          "carouselSlides": null,
+          "postVisual": null,
+          "reelBeats": [
+            {
+              "time": "0:00–0:02",
+              "spokenOrOnScreenCopy": "F1 has a catch-up rule for 2026 engines. It is called ADUO.",
+              "visual": "Fast title animation: 'ADUO, explained' over a simplified power-unit silhouette. Small subtitle: '2026–2030'."
+            },
+            {
+              "time": "0:02–0:05",
+              "spokenOrOnScreenCopy": "ADUO means Additional Development and Upgrade Opportunities.",
+              "visual": "Expand the acronym word by word. Show a padlock opening beside an engine-development icon."
+            },
+            {
+              "time": "0:05–0:08",
+              "spokenOrOnScreenCopy": "First: this is for power-unit manufacturers. Not directly for teams or drivers.",
+              "visual": "Manufacturer/factory icon receives a green tick. Team garage and driver helmet icons receive subtle red crosses."
+            },
+            {
+              "time": "0:08–0:12",
+              "spokenOrOnScreenCopy": "F1 compares the combustion engine — the ICE — against the leading benchmark.",
+              "visual": "Show an engine block labelled 'ICE' against a benchmark line at the top of a vertical ladder."
+            },
+            {
+              "time": "0:12–0:15",
+              "spokenOrOnScreenCopy": "It does not use total power-unit performance.",
+              "visual": "Split-screen: 'ICE performance index' gets a tick. 'Energy recovery, batteries, deployment and energy management' sit outside a highlighted measurement box."
+            },
+            {
+              "time": "0:15–0:20",
+              "spokenOrOnScreenCopy": "Two to under four percent behind? One extra upgrade opportunity this season, and one next season.",
+              "visual": "Animate the 2%–under 4% band on the ladder. Two calendar cards appear: 'This season: +1' and 'Next season: +1'."
+            },
+            {
+              "time": "0:20–0:24",
+              "spokenOrOnScreenCopy": "Four percent or more behind? Two this season, and two next season.",
+              "visual": "Animate the 4%+ band. Four upgrade tokens appear, grouped as two beneath 'This season' and two beneath 'Next season'."
+            },
+            {
+              "time": "0:24–0:27",
+              "spokenOrOnScreenCopy": "So no, it is not Balance of Performance. And it is not an instant speed boost.",
+              "visual": "Large 'NOT BOP' and 'NOT INSTANT SPEED' labels appear with clean strike-through animations. Replace them with: 'Limited extra development chances'."
+            },
+            {
+              "time": "0:27–0:30",
+              "spokenOrOnScreenCopy": "Save this for 2026 — and follow for F1 rules, simply explained.",
+              "visual": "Return to the percentage ladder as a static end card. Include the page handle and a prominent 'SAVE THIS' prompt."
+            }
+          ]
+        }
+      },
+      "productionNotes": [
+        "Keep the finished runtime between 28 and 30 seconds; use captions throughout for silent viewing.",
+        "Use 'extra development and upgrade opportunities' rather than implying guaranteed performance gains.",
+        "Do not name recipient manufacturers in the spoken reel unless the The Race attribution is included on-screen and in the caption.",
+        "Add a small source card at the end or in the caption: Formula1.com for ADUO mechanics; The Race for reported first-assessment recipients.",
+        "Avoid using team liveries as the visual shorthand for eligibility; use manufacturer/factory and engine icons to reinforce that the qualifying entity is the power-unit manufacturer."
+      ],
+      "factChecksRequired": [
+        "Confirm the current FIA wording and threshold allocations for ADUO before publishing, in case the 2026 regulations or implementation guidance have changed.",
+        "If publishing the first-assessment recipient claims, verify The Race report and retain explicit attribution: Ford-branded Red Bull Powertrains at the benchmark; Mercedes with one additional 2026 upgrade; Ferrari and Honda with two.",
+        "Confirm that the FIA's exact ICE Performance Index methodology remains non-public before stating that it is not public."
+      ]
+    }
+  }
+]

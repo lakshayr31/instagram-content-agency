@@ -1,0 +1,27 @@
+{
+  "approvedContent": {
+    "category": "growth",
+    "title": "ADUO: F1's 2026 engine catch-up system",
+    "coreMessage": "Explain in simple terms how F1 grants limited extra engine-development opportunities to manufacturers whose combustion engine is behind the benchmark.",
+    "sourceUrl": "https://www.formula1.com/en/latest/article/explained-what-is-f1s-aduo-engine-upgrade-system-and-how-will-it-work.2A67N47ntcdQbKhHOd7GdD",
+    "verifiedFacts": [
+      "ADUO means Additional Development and Upgrade Opportunities.",
+      "The 2026 to 2030 mechanism is for power-unit manufacturers, not directly for teams or drivers.",
+      "The FIA trigger is based on an ICE Performance Index, not total power-unit performance.",
+      "At 2% to under 4% behind the leading ICE, a manufacturer can receive one additional upgrade in the current season and one in the following season.",
+      "At 4% or more behind, a manufacturer can receive two additional upgrades in the current season and two in the following season.",
+      "Energy recovery, deployment, batteries and broader energy management are outside the qualifying ICE measure."
+    ],
+    "requiredAngle": "Make a technical regulation understandable in under 30 seconds for an India-first F1 audience."
+  },
+  "clientBrief": {
+    "audience": "Indian F1 fans who may be new to 2026 power-unit rules",
+    "brandVoice": "very simple, confident, never condescending",
+    "offer": "independent Formula 1 explainer and news page",
+    "boundaries": [
+      "Do not call ADUO balance of performance or an instant speed boost.",
+      "Do not say a team gets ADUO when the manufacturer is the qualifying entity."
+    ],
+    "objective": "saves, shares, and new-follower reach"
+  }
+}
