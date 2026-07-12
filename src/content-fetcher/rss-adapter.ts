@@ -27,6 +27,7 @@ export interface RssFetchDependencies {
   alreadySeen?: (url: string) => Promise<boolean>;
   blockedUrlPatterns?: RegExp[];
   maxAgeMs?: number;
+  maxItemsPerSource?: number;
 }
 
 const defaultGoogleNewsDecoder = new GoogleNewsDecoder();
@@ -69,12 +70,15 @@ export async function fetchRssSources(
   const alreadySeen = dependencies.alreadySeen ?? (async () => false);
   const blockedUrlPatterns = dependencies.blockedUrlPatterns ?? [];
   const maxAgeMs = dependencies.maxAgeMs ?? 24 * 60 * 60 * 1000;
+  const maxItemsPerSource = dependencies.maxItemsPerSource ?? Number.POSITIVE_INFINITY;
   const contentItems: ContentItem[] = [];
 
   for (const source of sources) {
     try {
       const feed = await parser.parseURL(source.url);
+      let acceptedFromSource = 0;
       for (const item of feed.items ?? []) {
+        if (acceptedFromSource >= maxItemsPerSource) break;
         if (!item.link || !isRecent(item.pubDate, now, maxAgeMs)) continue;
 
         const sourceUrl = await resolveUrl(item.link);
@@ -82,6 +86,7 @@ export async function fetchRssSources(
         if (await alreadySeen(sourceUrl)) continue;
 
         contentItems.push(normalizeItem(item, source, sourceUrl, now));
+        acceptedFromSource++;
       }
     } catch (error) {
       console.warn(`RSS source failed (${source.name}): ${error instanceof Error ? error.message : String(error)}`);

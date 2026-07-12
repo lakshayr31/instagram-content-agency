@@ -42,6 +42,32 @@ test("fetches recent RSS items, resolves URLs, and omits duplicates and blocked 
   }]);
 });
 
+test("limits accepted articles for each RSS source", async () => {
+  const now = new Date("2026-07-12T12:00:00.000Z");
+  const articles = await fetchRssSources(
+    [{ name: "publisher", url: "https://publisher.example/feed.xml" }],
+    {
+      now,
+      maxItemsPerSource: 5,
+      parser: {
+        parseURL: async () => ({
+          items: Array.from({ length: 6 }, (_, index) => ({
+            title: `Article ${index + 1}`,
+            link: `https://publisher.example/article-${index + 1}`,
+            pubDate: "2026-07-12T11:00:00.000Z",
+          })),
+        }),
+      },
+      resolveUrl: async (url) => url,
+      alreadySeen: async () => false,
+    },
+  );
+
+  assert.deepEqual(articles.map((article) => article.title), [
+    "Article 1", "Article 2", "Article 3", "Article 4", "Article 5",
+  ]);
+});
+
 test("continues when one RSS source fails", async () => {
   const items = await fetchRssSources(
     [
