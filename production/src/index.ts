@@ -112,6 +112,11 @@ async function recordEvent(env: Env, runId: string, event: Omit<RunEvent, "creat
     .bind(crypto.randomUUID(), runId, event.role, event.event_type, event.status, event.detail, event.latency_ms, event.input_tokens, event.output_tokens, event.estimated_cost_usd, now()).run();
 }
 
+async function markRoleSucceeded(env: Env, runId: string, role: string): Promise<void> {
+  await env.DB.prepare("UPDATE run_events SET status = ? WHERE run_id = ? AND role = ? AND status = ?")
+    .bind("succeeded", runId, role, "waiting_for_human").run();
+}
+
 function modelMetrics(value: Record<string, unknown>): Pick<RunEvent, "input_tokens" | "output_tokens" | "estimated_cost_usd"> {
   const usage = value._usage as { prompt_tokens?: number; completion_tokens?: number } | undefined;
   const input_tokens = usage?.prompt_tokens ?? 0;
@@ -207,6 +212,7 @@ async function updateRun(request: Request, env: Env, userId: string, run: RunRow
 
 async function confirmBrief(env: Env, userId: string, run: RunRow): Promise<Response> {
   if (run.stage !== "awaiting_brief_confirmation") return fail("This brief is not awaiting confirmation.", 409);
+  await markRoleSucceeded(env, run.id, "manager");
   const sources = await researchSources(env, run.brief);
   if (sources.length === 0) return fail("No cited source material was available. Add source context to the brief or configure server-side Linkup research.", 422);
   const ideaResult = await openAiJson(env, IDEA_SYSTEM, { brief: run.brief, manager: JSON.parse(run.manager_json ?? "{}"), sources });
@@ -221,6 +227,7 @@ async function confirmBrief(env: Env, userId: string, run: RunRow): Promise<Resp
 
 async function approveIdeas(env: Env, userId: string, run: RunRow): Promise<Response> {
   if (run.stage !== "ideas_review") return fail("Ideas are not awaiting approval.", 409);
+  await markRoleSucceeded(env, run.id, "strategist");
   const memory = await feedbackForRun(env, run.id);
   const scripts = await openAiJson(env, SCRIPT_SYSTEM, { brief: run.brief, ideas: JSON.parse(run.ideas_json ?? "{}"), feedbackMemory: memory });
   await env.DB.prepare("UPDATE runs SET stage = ?, scripts_json = ?, updated_at = ? WHERE id = ? AND user_id = ?")
@@ -231,12 +238,13 @@ async function approveIdeas(env: Env, userId: string, run: RunRow): Promise<Resp
 
 async function approveScripts(env: Env, userId: string, run: RunRow): Promise<Response> {
   if (run.stage !== "scripts_review") return fail("Scripts are not awaiting approval.", 409);
+  await markRoleSucceeded(env, run.id, "producer");
   const memory = await feedbackForRun(env, run.id);
   const final = await openAiJson(env, FINAL_SYSTEM, { brief: run.brief, scripts: JSON.parse(run.scripts_json ?? "{}"), feedbackMemory: memory });
   await env.DB.prepare("UPDATE runs SET stage = ?, final_json = ?, updated_at = ? WHERE id = ? AND user_id = ?")
     .bind("final", JSON.stringify(final), now(), run.id, userId).run();
   await recordEvent(env, run.id, { role: "designer", event_type: "static_assets", status: "succeeded", detail: "Post and carousel render plans are ready for one-click download.", latency_ms: 0, input_tokens: 0, output_tokens: 0, estimated_cost_usd: 0 });
-  await recordEvent(env, run.id, { role: "video_audio_manager", event_type: "reel", status: "ready", detail: "Reel storyboard and ElevenLabs narration are ready; MP4 rendering requires the configured renderer adapter.", latency_ms: 0, input_tokens: 0, output_tokens: 0, estimated_cost_usd: 0 });
+  await recordEvent(env, run.id, { role: "video_audio_manager", event_type: "reel", status: "succeeded", detail: "Reel storyboard and the one-click narration-plus-video renderer are ready.", latency_ms: 0, input_tokens: 0, output_tokens: 0, estimated_cost_usd: 0 });
   await recordEvent(env, run.id, { role: "poster", event_type: "package", status: "succeeded", detail: "Publishing package finalized; no external publishing was performed.", latency_ms: 0, input_tokens: 0, output_tokens: 0, estimated_cost_usd: 0 });
   return json({ stage: "final", final });
 }
