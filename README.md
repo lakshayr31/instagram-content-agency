@@ -7,9 +7,11 @@ A general-purpose, source-backed content intelligence foundation for an Instagra
 1. **Content Fetcher** normalizes RSS articles into a common `ContentItem` shape with a canonical source URL, source label, title, summary, timestamp, and topics.
 2. **Strategist** scores each item for a client brief and returns `important`, `watch`, or `ignore`, plus a rationale and suggested Instagram angle.
 
-The next source adapters will be:
-- Linkup operator-initiated web research (server-side only)
-- RSS feed fetching/parsing
+The implemented source adapters are:
+- `src/rss-adapter.ts`: RSS fetching, 24-hour freshness filtering, source-level fault isolation, optional Google News redirect resolution, blocked-URL filtering, and injectable duplicate checking.
+- Linkup operator-initiated web research (server-side only; adapter to be added next)
+
+The RSS adapter is deliberately storage-agnostic. A future database layer supplies the `alreadySeen(url)` dependency, rather than coupling ingestion to a specific provider.
 
 ## Credentials
 
