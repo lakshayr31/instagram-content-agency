@@ -87,12 +87,13 @@ async function openAiJson(env: Env, system: string, input: unknown): Promise<Rec
     console.error(JSON.stringify({ event: "openai_error", status: response.status, detail: detail.slice(0, 500) }));
     throw new Error("The Manager provider did not return a usable response.");
   }
-  const payload = await response.json() as { choices?: Array<{ message?: { content?: string } }> };
+  const payload = await response.json() as { choices?: Array<{ message?: { content?: string } }>; usage?: { prompt_tokens?: number; completion_tokens?: number } };
   const content = payload.choices?.[0]?.message?.content;
   if (!content) throw new Error("The Manager provider returned an empty response.");
   try {
     const parsed = JSON.parse(content);
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error();
+    Object.defineProperty(parsed, "_usage", { value: payload.usage ?? {}, enumerable: false });
     return parsed as Record<string, unknown>;
   } catch {
     throw new Error("The Manager provider returned invalid structured output.");
@@ -109,6 +110,13 @@ type RunEvent = { role: string; event_type: string; status: string; detail: stri
 async function recordEvent(env: Env, runId: string, event: Omit<RunEvent, "created_at">): Promise<void> {
   await env.DB.prepare("INSERT INTO run_events (id, run_id, role, event_type, status, detail, latency_ms, input_tokens, output_tokens, estimated_cost_usd, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
     .bind(crypto.randomUUID(), runId, event.role, event.event_type, event.status, event.detail, event.latency_ms, event.input_tokens, event.output_tokens, event.estimated_cost_usd, now()).run();
+}
+
+function modelMetrics(value: Record<string, unknown>): Pick<RunEvent, "input_tokens" | "output_tokens" | "estimated_cost_usd"> {
+  const usage = value._usage as { prompt_tokens?: number; completion_tokens?: number } | undefined;
+  const input_tokens = usage?.prompt_tokens ?? 0;
+  const output_tokens = usage?.completion_tokens ?? 0;
+  return { input_tokens, output_tokens, estimated_cost_usd: Number((input_tokens * 0.0000004 + output_tokens * 0.0000016).toFixed(6)) };
 }
 
 async function eventsForRun(env: Env, runId: string): Promise<RunEvent[]> {
@@ -182,7 +190,7 @@ async function createRun(request: Request, env: Env, user: { id: string }): Prom
   const id = crypto.randomUUID();
   await env.DB.prepare("INSERT INTO runs (id, user_id, brief, stage, manager_json, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)")
     .bind(id, user.id, brief, "awaiting_brief_confirmation", JSON.stringify(manager), now(), now()).run();
-  await recordEvent(env, id, { role: "manager", event_type: "brief_restatement", status: "waiting_for_human", detail: "Manager summarized the brief and paused for explicit confirmation.", latency_ms: 0, input_tokens: 0, output_tokens: 0, estimated_cost_usd: 0 });
+  await recordEvent(env, id, { role: "manager", event_type: "brief_restatement", status: "waiting_for_human", detail: "Manager summarized the brief and paused for explicit confirmation.", latency_ms: 0, ...modelMetrics(manager) });
   return json({ id, stage: "awaiting_brief_confirmation", manager });
 }
 
@@ -196,7 +204,7 @@ async function confirmBrief(env: Env, userId: string, run: RunRow): Promise<Resp
   await env.DB.prepare("UPDATE runs SET stage = ?, ideas_json = ?, updated_at = ? WHERE id = ? AND user_id = ?")
     .bind("ideas_review", JSON.stringify(strategy), now(), run.id, userId).run();
   await recordEvent(env, run.id, { role: "sourcer", event_type: "research", status: "succeeded", detail: `Collected ${sources.length} cited sources through Linkup.`, latency_ms: 0, input_tokens: 0, output_tokens: 0, estimated_cost_usd: 0 });
-  await recordEvent(env, run.id, { role: "strategist", event_type: "idea_slate", status: "waiting_for_human", detail: "Generated one post, carousel, and reel; paused at ideas review.", latency_ms: 0, input_tokens: 0, output_tokens: 0, estimated_cost_usd: 0 });
+  await recordEvent(env, run.id, { role: "strategist", event_type: "idea_slate", status: "waiting_for_human", detail: "Generated one post, carousel, and reel; paused at ideas review.", latency_ms: 0, ...modelMetrics(ideas) });
   return json({ stage: "ideas_review", ideas: strategy });
 }
 
@@ -206,7 +214,7 @@ async function approveIdeas(env: Env, userId: string, run: RunRow): Promise<Resp
   const scripts = await openAiJson(env, SCRIPT_SYSTEM, { brief: run.brief, ideas: JSON.parse(run.ideas_json ?? "{}"), feedbackMemory: memory });
   await env.DB.prepare("UPDATE runs SET stage = ?, scripts_json = ?, updated_at = ? WHERE id = ? AND user_id = ?")
     .bind("scripts_review", JSON.stringify(scripts), now(), run.id, userId).run();
-  await recordEvent(env, run.id, { role: "producer", event_type: "scripts", status: "waiting_for_human", detail: "Produced post copy, carousel slide sequence, and reel script; paused at script review.", latency_ms: 0, input_tokens: 0, output_tokens: 0, estimated_cost_usd: 0 });
+  await recordEvent(env, run.id, { role: "producer", event_type: "scripts", status: "waiting_for_human", detail: "Produced post copy, carousel slide sequence, and reel script; paused at script review.", latency_ms: 0, ...modelMetrics(scripts) });
   return json({ stage: "scripts_review", scripts });
 }
 
