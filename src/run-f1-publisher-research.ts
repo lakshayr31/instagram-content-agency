@@ -33,3 +33,6 @@ console.log(JSON.stringify({
   rssArticleCount: rssArticles.length,
   linkupResultCounts: linkupResearch.map(({ question, articles }) => ({ question, count: articles.length })),
 }, null, 2));
+
+// google-news-decoder may retain a network handle; scheduled runs must terminate.
+process.exit(0);
