@@ -8,7 +8,8 @@ A general-purpose, source-backed content intelligence foundation for an Instagra
 2. **Strategist** scores each item for a client brief and returns `important`, `watch`, or `ignore`, plus a rationale and suggested Instagram angle.
 
 The implemented source adapters are:
-- `src/rss-adapter.ts`: RSS fetching, 24-hour freshness filtering, source-level fault isolation, optional Google News redirect resolution, blocked-URL filtering, and injectable duplicate checking.
+- `src/rss-adapter.ts`: RSS fetching, source-level fault isolation, optional Google News redirect resolution, blocked-URL filtering, and injectable duplicate checking.
+- `src/fetch-latest-articles.ts`: backend ingestion hook that restricts every configured source to the latest two hours.
 - Linkup operator-initiated web research (server-side only; adapter to be added next)
 
 The RSS adapter is deliberately storage-agnostic. A future database layer supplies the `alreadySeen(url)` dependency, rather than coupling ingestion to a specific provider.
