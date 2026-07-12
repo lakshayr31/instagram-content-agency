@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "tsx --test tests/**/*.test.ts",
-    "typecheck": "tsc --noEmit"
+    "test": "tsx --test tests/*.test.ts tests/**/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "fetch:cycle": "node --env-file=.env.local --import tsx src/run-content-intelligence-cycle.ts"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
